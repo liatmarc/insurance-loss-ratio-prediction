@@ -16,7 +16,7 @@ insurance-ml-project/
 ├── insurance_loss_ratio_prediction.ipynb  # Main Jupyter notebook
 ├── README.md                              # This file
 ├── requirements.txt                       # Python dependencies
-└── data/                                  # Downloaded datasets (created when you run)
+└── data/                                  # Downloaded datasets (created after a run)
 ```
 
 ## 🚀 Quick Start
@@ -46,7 +46,7 @@ Open `insurance_loss_ratio_prediction.ipynb` and run all cells sequentially.
 
 ## 📊 Dataset Options
 
-The notebook currently uses **synthetic data** based on real French motor insurance characteristics. Here are 3 real dataset alternatives you can use:
+The notebook currently uses **synthetic data** based on real French motor insurance characteristics. Here are 3 real dataset alternatives:
 
 ### Option 1: Kaggle - Insurance Claims Dataset (Recommended)
 - **URL**: https://www.kaggle.com/datasets/litvinenko630/insurance-claims
@@ -84,8 +84,6 @@ The notebook currently uses **synthetic data** based on real French motor insura
   y = automobile.data.targets
   ```
 
-## 📝 What You'll Learn
-
 ### Technical Skills Demonstrated
 
 1. **Data Processing**
@@ -121,11 +119,8 @@ The notebook currently uses **synthetic data** based on real French motor insura
 - **Target Loss Ratio**: Typically 60-70% for profitability
 - **Auto-Bind**: Policies approved without manual review
 
-## 🎤 Interview Preparation
 
-### Questions You Can Answer
-
-**1. "Walk me through your modeling process"**
+**1. "Walk through the modeling process"**
 ```
 I followed a 12-step end-to-end process:
 1. Problem definition - predict loss ratios for auto-bind decisions
@@ -142,7 +137,7 @@ I followed a 12-step end-to-end process:
 12. Production pipeline - saved model and metadata
 ```
 
-**2. "Why did you choose XGBoost?"**
+**2. "Why choose XGBoost?"**
 ```
 XGBoost was optimal for this problem because:
 - Best performance on tabular data (proven in Kaggle competitions)
@@ -153,7 +148,7 @@ XGBoost was optimal for this problem because:
 - Regularization prevents overfitting with 27 features
 ```
 
-**3. "How would you put this into production?"**
+**3. "How to put this into production?"**
 ```
 1. API Development: FastAPI endpoint for real-time predictions
 2. Feature Store: Pre-compute historical aggregates (region avg loss ratio)
@@ -179,7 +174,7 @@ Mitigations:
 - Regular model retraining (quarterly)
 ```
 
-**5. "How do you handle explainability?"**
+**5. "How to handle explainability?"**
 ```
 Three-level approach:
 1. Global: Feature importance shows top drivers (young driver, vehicle power)
@@ -193,7 +188,7 @@ Three-level approach:
 
 ### Real Performance Metrics to Quote
 
-After running the notebook, you'll have actual metrics:
+After running the notebook, the actual metrics are:
 - **Model Performance**: RMSE, MAE, R² scores
 - **Business Impact**: Auto-bind rate, accuracy, cost savings
 - **Feature Importance**: Top 5 predictive features
@@ -238,31 +233,7 @@ rf_model.fit(X_train, y_train)
 - [SHAP Documentation](https://shap.readthedocs.io/)
 - [Interpreting ML Models with SHAP](https://christophm.github.io/interpretable-ml-book/shap.html)
 
-## 🎓 Interview Tips
 
-### Do's ✅
-- **Lead with business impact**: "This model enables 42% auto-bind rate while maintaining profitability"
-- **Show end-to-end thinking**: Data → Model → Deployment → Monitoring
-- **Discuss tradeoffs**: "I chose XGBoost over neural networks because interpretability is critical in insurance"
-- **Acknowledge limitations**: "The model may need retraining if regulations change"
-
-### Don'ts ❌
-- Don't just recite metrics without context
-- Don't claim perfect accuracy - be realistic
-- Don't ignore the business problem
-- Don't forget about model monitoring and maintenance
-
-## 🤝 Next Steps
-
-After completing this project:
-
-1. **Add to GitHub**: Create a repo with this notebook and README
-2. **Write Blog Post**: Explain your approach on Medium/LinkedIn
-3. **Extend the Project**:
-   - Try ensemble methods (stacking XGBoost + Random Forest)
-   - Add time-series analysis for claim trends
-   - Build a Streamlit dashboard for predictions
-4. **Prepare Questions**: Ask about their data infrastructure, model deployment, A/B testing
 
 ## 📧 Questions?
 
@@ -270,11 +241,3 @@ Review the notebook comments and markdown cells for detailed explanations of eac
 
 ---
 
-**Good luck with your interview!** 🚀
-
-You now have:
-- ✅ Real working code
-- ✅ Actual performance metrics
-- ✅ Business impact analysis
-- ✅ Production-ready pipeline
-- ✅ Interview talking points
