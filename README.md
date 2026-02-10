@@ -40,7 +40,7 @@ jupyter notebook
 
 ### 2. Open the Notebook
 
-Open `insurance_loss_ratio_prediction.ipynb` and run all cells sequentially.
+Open `insurance_loss_ratio_prediction.ipynb` and run all cells in JupyterLab.
 
 **Estimated time to complete**: 10-15 minutes
 
