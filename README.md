@@ -1,4 +1,4 @@
-# Insurance Loss Ratio Prediction
+# Insurance Loss Ratio Prediction - Research and Learn Insurance Domain
 
 A complete, hands-on implementation of loss ratio prediction for commercial insurance using XGBoost on real data.
 
@@ -12,11 +12,13 @@ This project demonstrates end-to-end machine learning for insurance underwriting
 ## 📁 Project Structure
 
 ```
-insurance-ml-project/
-├── insurance_loss_ratio_prediction.ipynb  # Main Jupyter notebook
-├── README.md                              # This file
-├── requirements.txt                       # Python dependencies
-└── data/                                  # Downloaded datasets (created after a run)
+insurance-loss-ratio-prediction/
+│
+├── insurance_loss_ratio_prediction.ipynb   # Main modeling and evaluation notebook
+├── downloadata.py                           # Data ingestion / preprocessing logic
+├── requirements.txt                         # Reproducible dependencies
+├── README.md                                # Project documentation
+
 ```
 
 ## 🚀 Quick Start
@@ -31,11 +33,12 @@ cd insurance-ml-project
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-# Install dependencies
+# How to run in jupyterLab
+pip install jupyterlab
 pip install -r requirements.txt
+python downloadata.py
+jupyter lab insurance_loss_ratio_prediction.ipynb
 
-# Start Jupyter
-jupyter notebook
 ```
 
 ### 2. Open the Notebook
@@ -235,9 +238,7 @@ rf_model.fit(X_train, y_train)
 
 
 
-## 📧 Questions?
 
-Review the notebook comments and markdown cells for detailed explanations of each step.
 
 ---
 
