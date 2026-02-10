@@ -1,4 +1,4 @@
-# Insurance Loss Ratio Prediction - Interview Project
+# Insurance Loss Ratio Prediction
 
 A complete, hands-on implementation of loss ratio prediction for commercial insurance using XGBoost on real data.
 
