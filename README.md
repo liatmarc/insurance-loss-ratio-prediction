@@ -1,4 +1,4 @@
-# Insurance Loss Ratio Prediction - Research and Learn Insurance Domain
+# Insurance Loss Ratio Prediction -  Learning Insurance Domain
 
 A complete, hands-on implementation of loss ratio prediction for commercial insurance using XGBoost on real data.
 
