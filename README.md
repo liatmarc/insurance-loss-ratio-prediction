@@ -1,226 +1,94 @@
-# Insurance Loss Ratio Prediction -  Learning Insurance Domain
+# Insurance Loss Modeling Using a Frequency--Severity Framework
+A complete, hands-on implementation of loss ratio prediction for commercial insurance using GLM and XGBoost on real data.
 
-A complete, hands-on implementation of loss ratio prediction for commercial insurance using XGBoost on real data.
+## 📊 Executive Summary
 
-## 🎯 Project Overview
+This project implements an actuarially consistent insurance loss
+modeling pipeline inspired by the French Motor Third-Party Liability
+dataset.
 
-This project demonstrates end-to-end machine learning for insurance underwriting automation:
-- **Problem**: Predict loss ratios to enable automated policy binding
-- **Business Goal**: Increase straight-through processing while maintaining profitability
-- **Technical Solution**: XGBoost regression with feature engineering and SHAP interpretability
+Rather than directly predicting loss ratio (which is highly volatile at
+the individual policy level), the modeling framework decomposes risk
+into:
 
-## 📁 Project Structure
+-   **Frequency modeling** (Poisson GLM and XGBoost)
+-   **Severity modeling** (Gamma-style GLM and XGBoost)
+-   **Expected Loss = Frequency × Severity**
+-   Portfolio-level evaluation using **cumulative lift analysis**
 
-```
-insurance-loss-ratio-prediction/
-│
-├── insurance_loss_ratio_prediction.ipynb   # Main modeling and evaluation notebook
-├── downloadata.py                           # Data ingestion / preprocessing logic
-├── requirements.txt                         # Reproducible dependencies
-├── README.md                                # Project documentation
+This mirrors real-world actuarial pricing and underwriting workflows.
 
-```
+------------------------------------------------------------------------
 
-## 🚀 Quick Start
+## 🔬 Modeling Framework
 
-### 1. Setup Environment
+### 1. Frequency Model
 
-```bash
-# Clone or download this project
-cd insurance-ml-project
+-   Target: Claim Count
+-   Model types: Poisson GLM (baseline) and XGBoost (Poisson objective)
+-   Exposure handled appropriately in modeling
+-   Result: Modest but realistic predictive signal consistent with motor
+    insurance data
 
-# Create virtual environment (recommended)
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+### 2. Severity Model
 
-# How to run in jupyterLab
-pip install jupyterlab
-pip install -r requirements.txt
-python downloadata.py
-jupyter lab insurance_loss_ratio_prediction.ipynb
+-   Target: Claim Amount per Claim (conditional on claim occurrence)
+-   Model types: Gamma-style Tweedie GLM and log-scale XGBoost
+-   Accounts for heavy-tailed loss distributions
 
-```
+### 3. Combined Expected Loss
 
-### 2. Open the Notebook
+Expected Loss is computed as:
 
-Open `insurance_loss_ratio_prediction.ipynb` and run all cells in JupyterLab.
+    Expected Loss = E[Frequency] × E[Severity]
 
-**Estimated time to complete**: 10-15 minutes
+This allows stable risk ranking without denominator volatility
+introduced by loss ratios.
 
-## 📊 Dataset Options
+------------------------------------------------------------------------
 
-The notebook currently uses **synthetic data** based on real French motor insurance characteristics. Here are 3 real dataset alternatives:
+## 🎯 Portfolio Evaluation
 
-### Option 1: Kaggle - Insurance Claims Dataset (Recommended)
-- **URL**: https://www.kaggle.com/datasets/litvinenko630/insurance-claims
-- **Size**: 1,000 policies
-- **Features**: 40 attributes (policy, driver, vehicle, claims)
-- **Target**: Can calculate loss ratio from claim amounts
-- **How to use**:
-  1. Download from Kaggle
-  2. Save as `data/insurance_claims.csv`
-  3. Modify notebook data loading section
+Rather than focusing on policy-level R² (which is unstable for loss
+ratio modeling), performance is evaluated using:
 
-### Option 2: CAS Datasets - French Motor Insurance
-- **Package**: `CASdatasets` (R package)
-- **Dataset**: `freMTPL2freq` and `freMTPL2sev`
-- **Size**: 678,013 policies
-- **Features**: Driver age, vehicle, region, exposure, claims
-- **How to use**:
-  ```R
-  # In R:
-  install.packages("CASdatasets")
-  data(freMTPL2freq)
-  write.csv(freMTPL2freq, "data/freMTPL2freq.csv")
-  ```
+-   Cumulative Lift Curves
+-   Portfolio Selection Analysis
+-   Underwriting Segmentation Impact
 
-### Option 3: UCI - Auto Insurance
-- **URL**: https://archive.ics.uci.edu/dataset/53/automobile
-- **Size**: 205 vehicles
-- **Features**: Vehicle specs, insurance risk rating, normalized losses
-- **Target**: Normalized losses (similar to loss ratio)
-- **How to use**:
-  ```python
-  from ucimlrepo import fetch_ucirepo
-  automobile = fetch_ucirepo(id=10)
-  X = automobile.data.features
-  y = automobile.data.targets
-  ```
+Key Insight: Ranking policies by expected loss produces meaningful
+portfolio stratification. Lower predicted risk segments contain
+materially less than proportional realized loss.
 
-### Technical Skills Demonstrated
+------------------------------------------------------------------------
 
-1. **Data Processing**
-   - Handling imbalanced data (many zero-claim policies)
-   - Feature engineering for insurance domain
-   - Encoding categorical variables
+## 🔍 Lessons Learned
 
-2. **Model Building**
-   - XGBoost for regression
-   - Hyperparameter tuning with RandomizedSearchCV
-   - Cross-validation strategies
+-   Loss ratio is highly volatile at the policy level.
+-   Leakage can easily produce artificially high R² if claims or
+    premium-derived fields are included as features.
+-   Proper actuarial decomposition (frequency + severity) produces more
+    realistic and defensible results.
+-   Portfolio lift is more informative than individual-level regression
+    metrics in underwriting applications.
 
-3. **Model Evaluation**
-   - Statistical metrics (RMSE, MAE, R²)
-   - Business metrics (auto-bind rate, accuracy)
-   - Financial impact analysis
+------------------------------------------------------------------------
 
-4. **Interpretability**
-   - Feature importance analysis
-   - SHAP values for explainability
-   - Individual prediction explanations
+## 🚀 Business Framing
 
-5. **Production Readiness**
-   - Model serialization (joblib)
-   - Metadata tracking
-   - Production prediction pipeline
+This project demonstrates how machine learning can be applied
+responsibly within insurance modeling by:
 
-### Insurance Domain Knowledge
+-   Respecting actuarial structure
+-   Avoiding data leakage
+-   Handling exposure correctly
+-   Benchmarking GLM vs gradient boosting
+-   Evaluating performance through underwriting impact rather than raw
+    regression accuracy
 
-- **Loss Ratio**: Claims paid / Premiums earned
-- **Underwriting**: Risk assessment and pricing
-- **Straight-Through Processing**: Automated policy approval
-- **Target Loss Ratio**: Typically 60-70% for profitability
-- **Auto-Bind**: Policies approved without manual review
+------------------------------------------------------------------------
 
 
-**1. "Walk through the modeling process"**
-```
-I followed a 12-step end-to-end process:
-1. Problem definition - predict loss ratios for auto-bind decisions
-2. Data loading and exploration - 10K policies, ~10% with claims
-3. EDA - identified young drivers and high-power vehicles as risk factors
-4. Feature engineering - created 27 features including risk indicators
-5. Train-test split - 80/20 split
-6. Baseline model - XGBoost with defaults (R² = 0.42)
-7. Hyperparameter tuning - RandomizedSearchCV with 30 iterations
-8. Final model - achieved R² = 0.68, RMSE = 0.09
-9. Business evaluation - 42% auto-bind rate with 87% accuracy
-10. Feature importance - historical loss ratios most predictive
-11. SHAP analysis - for individual prediction explanations
-12. Production pipeline - saved model and metadata
-```
-
-**2. "Why choose XGBoost?"**
-```
-XGBoost was optimal for this problem because:
-- Best performance on tabular data (proven in Kaggle competitions)
-- Handles non-linear relationships (loss ratio isn't linear with features)
-- Fast predictions (<10ms) for real-time quoting
-- Built-in feature importance and SHAP compatibility for explainability
-- Robust to missing values and outliers
-- Regularization prevents overfitting with 27 features
-```
-
-**3. "How to put this into production?"**
-```
-1. API Development: FastAPI endpoint for real-time predictions
-2. Feature Store: Pre-compute historical aggregates (region avg loss ratio)
-3. Model Monitoring: Track prediction distribution drift, feature drift
-4. A/B Testing: Start with 10% of policies through auto-bind
-5. Feedback Loop: Collect actual loss ratios after 6-12 months
-6. Retraining Pipeline: Quarterly retraining with new data
-7. Explainability: SHAP dashboard for underwriters and regulators
-```
-
-**4. "What are the risks and limitations?"**
-```
-Risks:
-- Model drift if market conditions change (new regulations, pandemic)
-- Bias in historical data affecting certain demographics
-- False positives (auto-bind high-risk policies) hurt profitability
-
-Mitigations:
-- Monitor actual vs predicted loss ratios monthly
-- Audit for fairness across protected classes
-- Conservative thresholds (0.60 instead of 0.65) for auto-bind
-- Human override capability for edge cases
-- Regular model retraining (quarterly)
-```
-
-**5. "How to handle explainability?"**
-```
-Three-level approach:
-1. Global: Feature importance shows top drivers (young driver, vehicle power)
-2. Cohort: Analyze predictions by demographic segments
-3. Individual: SHAP waterfall plots explain each prediction
-   Example: "This policy has high predicted loss ratio because:
-   - Driver age 22 (+0.12)
-   - Vehicle power 14 HP (+0.09)
-   - Urban area (+0.05)"
-```
-
-### Real Performance Metrics to Quote
-
-After running the notebook, the actual metrics are:
-- **Model Performance**: RMSE, MAE, R² scores
-- **Business Impact**: Auto-bind rate, accuracy, cost savings
-- **Feature Importance**: Top 5 predictive features
-- **Example Predictions**: Specific policies with SHAP explanations
-
-## 🔧 Customization Options
-
-### Change Auto-Bind Threshold
-```python
-# In Step 10, modify:
-def classify_risk(predicted_lr):
-    if predicted_lr < 0.55:  # More conservative
-        return 'AUTO_BIND'
-```
-
-### Add More Features
-```python
-# In Step 3, add:
-df['credit_score_category'] = pd.cut(df['credit_score'], bins=[300, 600, 700, 850])
-df['multi_car_discount'] = (df['num_vehicles'] > 1).astype(int)
-```
-
-### Try Different Models
-```python
-from sklearn.ensemble import RandomForestRegressor
-
-rf_model = RandomForestRegressor(n_estimators=200, max_depth=10)
-rf_model.fit(X_train, y_train)
-```
 
 ## 📚 Additional Resources
 
